@@ -41,8 +41,8 @@ class ViewController: UIViewController {
             
         } else if panGestureRecognizer.state == UIGestureRecognizerState.Changed {
             print("Gesture changed at: \(point)")
-            trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
-            //            trayView.center = point
+            //trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
+                        trayView.center = point
             
         } else if panGestureRecognizer.state == UIGestureRecognizerState.Ended {
             print("Gesture ended at: \(point)")
