@@ -10,11 +10,19 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var trayOriginalCenter: CGPoint!
     @IBOutlet weak var trayView: UIView!
+    
+    var trayCenterWhenOpen: CGFloat?
+    var trayCenterWhenDown: CGFloat?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+//        trayCenterWhenOpen = 480
+//        trayCenterWhenDown = 640
+        trayCenterWhenOpen = trayView.center.y
+        trayCenterWhenDown = trayView.center.y + trayView.frame.size.height - 40
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,21 +37,36 @@ class ViewController: UIViewController {
     func onTrayPanGesture(panGestureRecognizer: UIPanGestureRecognizer) {
 
         // Absolute (x,y) coordinates in parent view's coordinate system
-        let point = panGestureRecognizer.locationInView(view)
+        let point = panGestureRecognizer.locationInView(trayView)
         
         // Total translation (x,y) over time in parent view's coordinate system
         let translation = panGestureRecognizer.translationInView(view)
         
+        let velocity = panGestureRecognizer.velocityInView(trayView)
+
+        
         if panGestureRecognizer.state == UIGestureRecognizerState.Began {
             print("Gesture began at: \(point)")
-            var trayOriginalCenter: CGPoint!
             trayOriginalCenter = trayView.center
+        
+
             
         } else if panGestureRecognizer.state == UIGestureRecognizerState.Changed {
             print("Gesture changed at: \(point)")
-            //trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
-                        trayView.center = point
             
+            if(velocity.y > 0) {
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    self.trayView.center = CGPoint(x: self.trayOriginalCenter.x, y: self.trayCenterWhenDown!)
+
+                })
+            } else {
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    self.trayView.center = CGPoint(x: self.trayOriginalCenter.x, y: self.trayCenterWhenOpen!)
+                })
+            }
+            
+            
+
         } else if panGestureRecognizer.state == UIGestureRecognizerState.Ended {
             print("Gesture ended at: \(point)")
             
